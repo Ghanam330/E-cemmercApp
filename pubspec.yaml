@@ -36,6 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.5
   get: ^4.6.5
   flutter_snake_navigationbar: ^0.6.1
+  badges: ^2.0.2
+  http: ^0.13.4
+  shimmer: ^2.0.0
+  cached_network_image: ^3.2.1
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:
