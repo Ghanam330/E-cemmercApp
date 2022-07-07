@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'popular_category_loading_card.dart';
+
 
 class PopularCategoryLoading extends StatelessWidget {
   const PopularCategoryLoading({Key? key}) : super(key: key);
@@ -14,7 +16,7 @@ class PopularCategoryLoading extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           itemCount: 5,
-          itemBuilder: (context, index) => const PopularCategoryLoading()),
+          itemBuilder: (context, index) => const PopularCategoryLoadingCard()),
     );
   }
 }
