@@ -1,5 +1,6 @@
 
 import 'package:ecemmercapp/model/product.dart';
+import 'package:ecemmercapp/service/local_service/local_ad_banner_service.dart';
 import 'package:ecemmercapp/service/remote_service/remote_popular_category_service.dart';
 import 'package:get/get.dart';
 import '../model/add_banner.dart';
@@ -17,28 +18,40 @@ class HomeController extends GetxController {
   RxBool isPopularCategoryLoading = false.obs;
 
   RxBool isPopularProductLoading = false.obs;
+  final LocalAdBannerService _localAdBannerService =LocalAdBannerService();
 
   @override
-  void onInit() {
+  void onInit()async{
+    await _localAdBannerService.init();
     getAdBanners();
     getPopularCategories();
     getPopularProduct();
     super.onInit();
   }
 
-  void getAdBanners() async{
-    try{
-      isBannerLoading(true);
-      var result = await RemoteBannerService().get();
-      if (result != null) {
-        bannerList.assignAll(adBannerListFromJson(result.body));
+  void getAdBanners() async {
+      try {
+        isBannerLoading(true);
+        //assigning local ad banners before call api
+        if (_localAdBannerService
+            .getAdBanners()
+            .isNotEmpty) {
+          bannerList.assignAll(_localAdBannerService.getAdBanners());
+        }
+        //call api
+        var result = await RemoteBannerService().get();
+        if (result != null) {
+          //assign api result
+          bannerList.assignAll(adBannerListFromJson(result.body));
+          //save api result to local db
+          _localAdBannerService.assignAllAdBanners(
+              adBanners: adBannerListFromJson(result.body));
+        }
+      } finally {
+        isBannerLoading(false);
       }
-    } finally {
-
-      print(bannerList.first.image);
-      isBannerLoading(false);
     }
-  }
+
 
   void getPopularCategories() async{
     try{
